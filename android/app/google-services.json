@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "544954505506",
+    "firebase_url": "https://one-glance-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "one-glance",
+    "storage_bucket": "one-glance.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544954505506:android:a4a70feca9edc781226d7b",
+        "android_client_info": {
+          "package_name": "com.example.one_glance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544954505506-5v00khfin24vngdomj05ul0tij3rmagf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCefh7CV8jhUHL-T2V97lBGblMOGF7Ygmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544954505506-5v00khfin24vngdomj05ul0tij3rmagf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
