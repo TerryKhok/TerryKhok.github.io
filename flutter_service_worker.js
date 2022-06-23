@@ -30,14 +30,14 @@ const RESOURCES = {
 "assets/packages/rflutter_alert/assets/images/icon_success.png": "8bb472ce3c765f567aa3f28915c1a8f4",
 "assets/packages/rflutter_alert/assets/images/icon_warning.png": "ccfc1396d29de3ac730da38a8ab20098",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
-"icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
-"icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
-"icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
-"icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
-"index.html": "d6f35bc11fe10b5736ec9ab2c2705521",
-"/": "d6f35bc11fe10b5736ec9ab2c2705521",
-"main.dart.js": "0a88cee77ba113eb16158e33ba3b06e6",
-"manifest.json": "c0446e39666cd547e9299f85480bf5a2",
+"icons/apple-touch-icon.png": "701382d30ed59e50f3e65f9d144273b9",
+"icons/logo192x192.png": "bbce938e18e6e644ef843d92be27b298",
+"icons/logo512x512.png": "c3061ef7f3f6ff6a5dc76cc29aa21f67",
+"index.html": "2da9d2ba1e7551b4ef74e91e2dad775d",
+"/": "2da9d2ba1e7551b4ef74e91e2dad775d",
+"logo.png": "bbce938e18e6e644ef843d92be27b298",
+"main.dart.js": "d9c9718121f49bd8dc2c253f564d7588",
+"manifest.json": "94959a18ae13259b1c540b882ef6ff42",
 "version.json": "f2716299d2128363c2f8d0551ec874f0"
 };
 
