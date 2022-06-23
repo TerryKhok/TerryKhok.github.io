@@ -33,10 +33,10 @@ const RESOURCES = {
 "icons/apple-touch-icon.png": "701382d30ed59e50f3e65f9d144273b9",
 "icons/logo192x192.png": "bbce938e18e6e644ef843d92be27b298",
 "icons/logo512x512.png": "c3061ef7f3f6ff6a5dc76cc29aa21f67",
-"index.html": "2da9d2ba1e7551b4ef74e91e2dad775d",
-"/": "2da9d2ba1e7551b4ef74e91e2dad775d",
+"index.html": "07ecd760bae6477dc624264d8076ab29",
+"/": "07ecd760bae6477dc624264d8076ab29",
 "logo.png": "bbce938e18e6e644ef843d92be27b298",
-"main.dart.js": "d9c9718121f49bd8dc2c253f564d7588",
+"main.dart.js": "abcab2e75a5de4f32db5edbff496ce1a",
 "manifest.json": "94959a18ae13259b1c540b882ef6ff42",
 "version.json": "f2716299d2128363c2f8d0551ec874f0"
 };
