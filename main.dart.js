@@ -67903,8 +67903,7 @@ else if(q===7)o.go=!0
 else if(q===8)o.id=!0
 else if(q===9)o.k1=!0
 else if(q===10)o.k2=!0
-r=s===1
-if(r)o.k3=!0
+if(p===1)o.k3=!0
 else if(p===2)o.k4=!0
 else if(p===3)o.r1=!0
 else if(p===4)o.r2=!0
@@ -67914,7 +67913,7 @@ else if(p===7)o.x1=!0
 else if(p===8)o.x2=!0
 else if(p===9)o.y1=!0
 else if(p===10)o.y2=!0
-if(r)o.a0=!0
+if(s===1)o.a0=!0
 else if(s===2)o.I=!0
 else if(s===3)o.L=!0
 else if(s===4)o.at=!0
