@@ -14,43 +14,54 @@ class ArtItem extends StatefulWidget {
 class _ArtItemState extends State<ArtItem> {
   @override
   Widget build(BuildContext context) {
-    final art = Provider.of<Art>(context, listen: false);
+    final art = Provider.of<Art>(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      color: art.isScored == true ? Colors.green : Colors.white30,
+      color: art.isScored == 1 ? Colors.green : Colors.transparent,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(3),
-        child: GridTile(
-          child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(
-                ArtDetailPage.routeName,
-                arguments: art.id,
-              );
-            },
-            child: Image.network(
-              art.imageURL,
-              fit: BoxFit.contain,
-            ),
-          ),
-          footer: GridTileBar(
-            backgroundColor: Colors.black54,
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              ArtDetailPage.routeName,
+              arguments: art.id,
+            );
+          },
+          child: GridTile(
+            
+            child: art.thumbnailURL != ''
+                ? Image.network(
+                    art.thumbnailURL,
+                    // art.imageURL,
+                    fit: BoxFit.contain,
+                  )
+                : Image.network(
+                    'https://firebasestorage.googleapis.com/v0/b/one-glance.appspot.com/o/Art%2Ferror404.png?alt=media&token=1e3ece1b-435b-45ea-b886-441fddd8f3a2',
+                    fit: BoxFit.contain,
+                  ),
+            footer: Container(
+              height: 55,
+              child: GridTileBar(
+                backgroundColor: Colors.black54,
+                title: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(art.id),
-                    SizedBox(width: 3),
-                    Text(art.title),
+                    const SizedBox(height:2),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(art.id),
+                        SizedBox(width: 3),
+                        Text(art.title),
+                      ],
+                    ),
+                    Text(
+                      art.description,
+                      style: TextStyle(fontSize: 10),
+                    ),
                   ],
                 ),
-                Text(
-                  art.description,
-                  style: TextStyle(fontSize: 10),
-                ),
-              ],
+              ),
             ),
           ),
         ),

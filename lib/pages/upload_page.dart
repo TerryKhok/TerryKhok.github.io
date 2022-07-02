@@ -1,15 +1,20 @@
 // @dart=2.9
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../main.dart';
 import './art_detail_page.dart';
+import './digital_page.dart';
 import './upload_page.dart';
+import './traditional_page.dart';
 import '../providers/arts.dart';
-import '../widgets/title_text_button.dart';
 import '../providers/art.dart';
 import '../providers/arts.dart';
+import '../widgets/title_text_button.dart';
+import '../widgets/appbar.dart';
 
 class UploadPage extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -32,16 +37,15 @@ class _UploadPageState extends State<UploadPage> {
     id: '',
     title: '',
     description: '',
-    isDigital: false,
-    isTraditional: false,
+    isDigital: 0,
+    isTraditional: 0,
     imageURL: '',
     scoreOriginality: 0,
     scoreTheme: 0,
-    scoreTechnique: 0,
     scoreCharDesign: 0,
     scoreOverallDesign: 0,
     comment: '',
-    isScored: false,
+    isScored: 0,
   );
   var _initValues = {
     'id': '',
@@ -50,7 +54,6 @@ class _UploadPageState extends State<UploadPage> {
     'imageURL': '',
     'scoreOriginality': '',
     'scoreTheme': '',
-    'scoreTechnique': '',
     'scoreCharDesign': '',
     'scoreOverallDesign': '',
     'comment': '',
@@ -79,7 +82,6 @@ class _UploadPageState extends State<UploadPage> {
           'imageURL': '',
           'scoreOriginality': _editedProduct.scoreOriginality as String,
           'scoreTheme': _editedProduct.scoreTheme as String,
-          'scoreTechnique': _editedProduct.scoreTechnique as String,
           'scoreCharDesign': _editedProduct.scoreCharDesign as String,
           'scoreOverallDesign': _editedProduct.scoreOverallDesign as String,
           'comment': _editedProduct.comment,
@@ -136,12 +138,10 @@ class _UploadPageState extends State<UploadPage> {
     if (_loadedItem.id != '') {
       await Provider.of<Arts>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
-      await print('updated');
     } else {
       try {
         await Provider.of<Arts>(context, listen: false)
             .addProduct(_editedProduct);
-        await print('new added');
       } catch (error) {
         await showDialog<Null>(
           context: context,
@@ -151,7 +151,7 @@ class _UploadPageState extends State<UploadPage> {
             actions: [
               FlatButton(
                   onPressed: () {
-                    // Navigator.of(ctx).pop();
+                    Navigator.of(ctx).pop();
                   },
                   child: const Text('Okay'))
             ],
@@ -159,6 +159,7 @@ class _UploadPageState extends State<UploadPage> {
         );
       }
     }
+
     setState(() {
       _isLoading = false;
     });
@@ -167,31 +168,7 @@ class _UploadPageState extends State<UploadPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Container(
-          padding: const EdgeInsets.all(2),
-          child: Image.asset(
-            'assets/images/Logo_w_small.png',
-            height: 50,
-            width: 50,
-          ),
-        ),
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/Ekibou_Logo_small.png',
-              height: 50,
-            ),
-            const SizedBox(width: 55),
-            const TitleTextButton(HomePage.routeName, 'HOME'),
-            const SizedBox(width: 55),
-            const TitleTextButton(UploadPage.routeName, 'UPLOAD'),
-            Expanded(child: Container()),
-            const TitleTextButton(HomePage.routeName, 'LOG IN'),
-            const SizedBox(width: 20),
-          ],
-        ),
-      ),
+      appBar: AppBarItem(),
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(),
@@ -228,7 +205,6 @@ class _UploadPageState extends State<UploadPage> {
                           imageURL: _editedProduct.imageURL,
                           scoreOriginality: _editedProduct.scoreOriginality,
                           scoreTheme: _editedProduct.scoreTheme,
-                          scoreTechnique: _editedProduct.scoreTechnique,
                           scoreCharDesign: _editedProduct.scoreCharDesign,
                           scoreOverallDesign: _editedProduct.scoreOverallDesign,
                           comment: _editedProduct.comment,
@@ -245,7 +221,6 @@ class _UploadPageState extends State<UploadPage> {
                           imageURL: _editedProduct.imageURL,
                           scoreOriginality: _editedProduct.scoreOriginality,
                           scoreTheme: _editedProduct.scoreTheme,
-                          scoreTechnique: _editedProduct.scoreTechnique,
                           scoreCharDesign: _editedProduct.scoreCharDesign,
                           scoreOverallDesign: _editedProduct.scoreOverallDesign,
                           comment: _editedProduct.comment,
@@ -278,7 +253,6 @@ class _UploadPageState extends State<UploadPage> {
                           imageURL: _editedProduct.imageURL,
                           scoreOriginality: _editedProduct.scoreOriginality,
                           scoreTheme: _editedProduct.scoreTheme,
-                          scoreTechnique: _editedProduct.scoreTechnique,
                           scoreCharDesign: _editedProduct.scoreCharDesign,
                           scoreOverallDesign: _editedProduct.scoreOverallDesign,
                           comment: _editedProduct.comment,
@@ -312,7 +286,6 @@ class _UploadPageState extends State<UploadPage> {
                           imageURL: _editedProduct.imageURL,
                           scoreOriginality: _editedProduct.scoreOriginality,
                           scoreTheme: _editedProduct.scoreTheme,
-                          scoreTechnique: _editedProduct.scoreTechnique,
                           scoreCharDesign: _editedProduct.scoreCharDesign,
                           scoreOverallDesign: _editedProduct.scoreOverallDesign,
                           comment: _editedProduct.comment,
@@ -329,8 +302,8 @@ class _UploadPageState extends State<UploadPage> {
                               setState(() {
                                 _isDigital = true;
                                 _isTraditional = false;
-                                _editedProduct.isDigital = _isDigital;
-                                _editedProduct.isTraditional = _isTraditional;
+                                _editedProduct.isDigital = 1;
+                                _editedProduct.isTraditional = 0;
                               });
                             },
                             child: const Text('Digital Art'),
@@ -353,8 +326,8 @@ class _UploadPageState extends State<UploadPage> {
                               setState(() {
                                 _isDigital = false;
                                 _isTraditional = true;
-                                _editedProduct.isDigital = _isDigital;
-                                _editedProduct.isTraditional = _isTraditional;
+                                _editedProduct.isDigital = 0;
+                                _editedProduct.isTraditional = 1;
                               });
                             },
                             child: const Text('Traditional Art'),
@@ -424,20 +397,6 @@ class _UploadPageState extends State<UploadPage> {
                           child: ElevatedButton(
                             onPressed: () {
                               _saveForm();
-                              // .then((value) => _form.currentState.reset());
-                              print(_editedProduct.id);
-                              print(_editedProduct.title);
-                              print(_editedProduct.description);
-                              print(_editedProduct.isDigital);
-                              print(_editedProduct.isTraditional);
-                              print(_editedProduct.imageURL);
-                              print(_editedProduct.scoreOriginality);
-                              print(_editedProduct.scoreTheme);
-                              print(_editedProduct.scoreTechnique);
-                              print(_editedProduct.scoreCharDesign);
-                              print(_editedProduct.scoreOverallDesign);
-                              print(_editedProduct.comment);
-                              print(_editedProduct.isScored);
                             },
                             style: ButtonStyle(
                               fixedSize: MaterialStateProperty.all<Size>(
@@ -445,6 +404,25 @@ class _UploadPageState extends State<UploadPage> {
                             ),
                             child: const Text(
                               'Upload',
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 28,
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Provider.of<Arts>(context, listen: false)
+                                  .updateThumbnail(context);
+                            },
+                            style: ButtonStyle(
+                              fixedSize: MaterialStateProperty.all<Size>(
+                                  const Size.fromWidth(350)),
+                            ),
+                            child: const Text(
+                              'Update Thumbnail',
                             ),
                           ),
                         ),

@@ -1,5 +1,7 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:one_glance/pages/traditional_page.dart';
+import 'package:one_glance/providers/scores.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,10 +9,17 @@ import 'package:firebase_core/firebase_core.dart';
 import './firebase_options.dart';
 import './providers/art.dart';
 import './providers/arts.dart';
+import './providers/auth.dart';
+import './providers/scores.dart';
+import './providers/excel.dart';
+import './pages/digital_page.dart';
+import './pages/traditional_page.dart';
 import './pages/art_detail_page.dart';
 import './pages/upload_page.dart';
+import './pages/auth_screen.dart';
 import './widgets/art_item.dart';
 import './widgets/title_text_button.dart';
+import './widgets/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,96 +36,46 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider.value(value: appTheme),
-        ChangeNotifierProvider.value(value: Arts()),
-        ChangeNotifierProvider.value(value: Art())
-      ],
-      child: MaterialApp(
-        title: 'Ekibou',
-        theme: appTheme.themeData,
-        home: HomePage(),
-        routes: {
-          HomePage.routeName: (ctx) => HomePage(),
-          ArtDetailPage.routeName: (ctx) => ArtDetailPage(),
-          UploadPage.routeName: (ctx) => UploadPage(),
-        },
-      ),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  static const routeName = "/home";
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  var _isInit = true;
-  var _isLoading = false;
-
-  @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<Arts>(context).fetchAndSetProduct().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
-
-  Widget build(BuildContext context) {
-    final artData = Provider.of<Arts>(context);
-    final arts = artData.items;
-    return Scaffold(
-      appBar: AppBar(
-        leading: Container(
-          padding: EdgeInsets.all(2),
-          child: Image.asset(
-            'assets/images/Logo_w_small.png',
-            height: 50,
-            width: 50,
+        ChangeNotifierProvider.value(value: Auth()),
+        ChangeNotifierProvider.value(value: Art()),
+        ChangeNotifierProxyProvider<Auth, Arts>(
+          update: (ctx, auth, previousArt) => Arts(
+            auth.token,
+            auth.userId,
+            previousArt == null ? [] : previousArt.items,
           ),
         ),
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/Ekibou_Logo_small.png',
-              height: 50,
-            ),
-            const SizedBox(width: 55),
-            const TitleTextButton(HomePage.routeName, 'HOME'),
-            const SizedBox(width: 55),
-            const TitleTextButton(UploadPage.routeName, 'UPLOAD'),
-            Expanded(child: Container()),
-            const TitleTextButton(HomePage.routeName, 'LOG IN'),
-            const SizedBox(width: 20),
-          ],
+        ChangeNotifierProxyProvider<Auth, Scores>(
+          update: (ctx, auth, previousScore) => Scores(
+            auth.token,
+            auth.userId,
+            previousScore == null ? [] : previousScore.scores,
+          ),
         ),
-      ),
-      body: Container(
-        child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 300,
-                childAspectRatio: 16 / 9,
-                crossAxisSpacing: 0,
-                mainAxisSpacing: 0),
-            itemCount: arts.length,
-            itemBuilder: (BuildContext ctx, i) {
-              return ChangeNotifierProvider.value(
-                value: arts[i],
-                child: Container(
-                  alignment: Alignment.center,
-                  child: ArtItem(),
+        ChangeNotifierProvider.value(value: ExcelItem()),
+      ],
+      child: Consumer<Auth>(
+        builder: (ctx, auth, _) => MaterialApp(
+          title: 'Ekibou',
+          theme: appTheme.themeData,
+          home: auth.isAuth
+              ? DigitalPage()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? SplashScreen()
+                          : AuthScreen(),
                 ),
-              );
-            }),
+          routes: {
+            DigitalPage.routeName: (ctx) => DigitalPage(),
+            TraditionalPage.routeName: (ctx) => TraditionalPage(),
+            ArtDetailPage.routeName: (ctx) => ArtDetailPage(),
+            UploadPage.routeName: (ctx) => UploadPage(),
+            AuthScreen.routeName: (ctx) => AuthScreen(),
+          },
+        ),
       ),
     );
   }

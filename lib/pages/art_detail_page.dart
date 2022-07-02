@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../main.dart';
 import './art_detail_page.dart';
+import './digital_page.dart';
 import './upload_page.dart';
+import './traditional_page.dart';
 import '../providers/arts.dart';
 import '../widgets/title_text_button.dart';
 import '../widgets/scoring_item.dart';
+import '../widgets/appbar.dart';
 
 class ArtDetailPage extends StatelessWidget {
   const ArtDetailPage({Key? key}) : super(key: key);
@@ -19,60 +23,68 @@ class ArtDetailPage extends StatelessWidget {
       context,
       listen: false,
     ).findById(id);
+
+    final Uri _pngUrl = Uri.parse(loadedArt.imageURL);
+    final Uri _psdUrl = Uri.parse(loadedArt.psdURL);
+
     return Scaffold(
-      appBar: AppBar(
-        leading: Container(
-          padding: EdgeInsets.all(2),
-          child: Image.asset(
-            'assets/images/Logo_w_small.png',
-            height: 50,
-            width: 50,
-          ),
-        ),
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/images/Ekibou_Logo_small.png',
-              height: 50,
-            ),
-            const SizedBox(width: 55),
-            const TitleTextButton(HomePage.routeName, 'HOME'),
-            const SizedBox(width: 55),
-            const TitleTextButton(UploadPage.routeName, 'UPLOAD'),
-            Expanded(child: Container()),
-            const TitleTextButton(HomePage.routeName, 'LOG IN'),
-            const SizedBox(width: 20),
-          ],
-        ),
-      ),
+      appBar: AppBarItem(),
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
           child: Column(
             children: [
-              SizedBox(height: 5),
               Container(
+                padding: const EdgeInsets.fromLTRB(5, 3, 5, 10),
                 height: 900,
-                child: Stack(
-                  alignment: AlignmentDirectional.topEnd,
-                  children: [
-                    Image.network(
-                      loadedArt.imageURL,
-                      fit: BoxFit.contain,
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.zoom_out_map_rounded),
-                    ),
-                  ],
+                child: Image.network(
+                  loadedArt.imageURL,
+                  fit: BoxFit.contain,
                 ),
               ),
               Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _launchUrl(_pngUrl);
+                    },
+                    child: Text('Download PNG'),
+                    style: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all<Size>(
+                        Size.fromWidth(180),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 100),
+                  loadedArt.isDigital == 1
+                      ? ElevatedButton(
+                          onPressed: () {
+                            _launchUrl(_psdUrl);
+                          },
+                          child: Text('Download PSD'),
+                          style: ButtonStyle(
+                            fixedSize: MaterialStateProperty.all<Size>(
+                              Size.fromWidth(180),
+                            ),
+                          ),
+                        )
+                      : SizedBox(width: 180),
+                ],
+                mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              SizedBox(height: 10),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    loadedArt.id,
-                    style: TextStyle(fontSize: 28),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 13,
+                      horizontal: 8,
+                    ),
+                    child: Text(
+                      loadedArt.id,
+                      style: TextStyle(fontSize: 32),
+                    ),
                   ),
                   SizedBox(width: 5),
                   Text(
@@ -81,51 +93,30 @@ class ArtDetailPage extends StatelessWidget {
                   ),
                 ],
               ),
-              Text(
-                loadedArt.description,
-                style: TextStyle(fontSize: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(height: 3),
+                      Text(
+                        'Name: ',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        'School: ',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    loadedArt.description,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
               ),
-              ScoringItem(),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  vertical: 50,
-                  horizontal: 20,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Previous & Save'),
-                      style: ButtonStyle(
-                        fixedSize: MaterialStateProperty.all<Size>(
-                          Size.fromWidth(200),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 100),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Save'),
-                      style: ButtonStyle(
-                        fixedSize: MaterialStateProperty.all<Size>(
-                          Size.fromWidth(100),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 100),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Next & Save'),
-                      style: ButtonStyle(
-                        fixedSize: MaterialStateProperty.all<Size>(
-                          Size.fromWidth(200),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              const SizedBox(height: 15),
+              ScoringItem(id: id),
               SizedBox(height: 50),
             ],
           ),
@@ -133,4 +124,8 @@ class ArtDetailPage extends StatelessWidget {
       ),
     );
   }
+}
+
+void _launchUrl(_url) async {
+  if (!await launchUrl(_url)) throw 'Could not launch $_url';
 }
